@@ -7,6 +7,7 @@ import time
 from random_word import RandomWords
 from selenium import webdriver
 from datetime import date
+import requests
 
 r = RandomWords()
 edge_options = webdriver.EdgeOptions()
@@ -42,15 +43,18 @@ def check_gained_points():
 
 
 if __name__ == '__main__':
-    if start_up():
-        while check_gained_points():
-            try:
-                rw = r.get_random_word()
-                search_bar = edge_browser.find_element('xpath', '//*[@id="sb_form_q"]')
-                search_bar.clear()
-                search_bar.send_keys(rw)
-                search_bar.submit()
-                print(f"done {edge_browser.current_url}")
-            except:
-                print("error")
-    edge_browser.quit()
+    try:
+        if start_up():
+            while check_gained_points():
+                try:
+                    rw = r.get_random_word()
+                    search_bar = edge_browser.find_element('xpath', '//*[@id="sb_form_q"]')
+                    search_bar.clear()
+                    search_bar.send_keys(rw)
+                    search_bar.submit()
+                    print(f"done {edge_browser.current_url}")
+                except:
+                    print("error")
+        edge_browser.quit()
+    except (requests.ConnectionError, requests.Timeout):
+        print("Internet is off")
