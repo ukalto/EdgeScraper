@@ -1,6 +1,6 @@
 from random_word import RandomWords
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, NoSuchWindowException, ElementNotInteractableException
+from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, NoSuchWindowException
 from datetime import date
 import requests
 
@@ -38,7 +38,8 @@ def check_gained_points():
                 .text.replace(" ", "").split('/')
             edge_browser.get("https://www.bing.com/")
             return fp != sp
-        except:
+        except (NoSuchElementException, ElementNotInteractableException) as e:
+            print(f"Couldn't find element {e}")
             continue
 
 
@@ -53,8 +54,8 @@ def main():
                     search_bar.send_keys(rw)
                     search_bar.submit()
                     print(f"done {edge_browser.current_url}")
-                except (NoSuchElementException, ElementNotInteractableException):
-                    print("error")
+                except (NoSuchElementException, ElementNotInteractableException) as e:
+                    print(f"error {e}")
             edge_browser.quit()
     except (requests.ConnectionError, requests.Timeout):
         print("Internet is off")

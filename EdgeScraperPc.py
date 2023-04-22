@@ -2,7 +2,7 @@ import time
 
 from random_word import RandomWords
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, NoSuchWindowException
+from selenium.common.exceptions import NoSuchElementException, ElementNotInteractableException, NoSuchWindowException, NoSuchFrameException
 from datetime import date
 import requests
 
@@ -19,9 +19,9 @@ edge_browser.get("https://www.bing.com/")
 
 def already_finished_today():
     today = date.today().strftime("%Y-%m-%d")
-    f = open("C:\\Users\\XYZ\\Desktop\\EdgeScraper\\tracking.txt").read().split("\n")
+    f = open("C:\\Users\\XYZ\\Desktop\\EdgeScraper\\tracking.txt").read().replace(" ", "").split("\n")
     for i in f:
-        if i == today:
+        if i.__eq__(today):
             return False
     return True
 
@@ -31,11 +31,13 @@ def check_gained_points():
         try:
             time.sleep(2)
             edge_browser.find_element('xpath', '//*[@id="id_rh"]').click()
+            time.sleep(2)
             edge_browser.switch_to.frame("bepfm")
             fp, sp = edge_browser.find_element('xpath', '//*[@id="modern-flyout"]/div/div[5]/div/div/div[1]/div/div').text.split('/')
             edge_browser.switch_to.default_content()
             return fp != sp
-        except (NoSuchElementException, ElementNotInteractableException):
+        except (NoSuchElementException, ElementNotInteractableException, NoSuchFrameException) as e:
+            print(f"Couldn't find element {e}")
             continue
 
 
@@ -50,8 +52,8 @@ def main():
                     search_bar.send_keys(rw)
                     search_bar.submit()
                     print(f"done {edge_browser.current_url}")
-                except (NoSuchElementException, ElementNotInteractableException):
-                    print("error")
+                except (NoSuchElementException, ElementNotInteractableException) as e:
+                    print(f"error {e}")
             edge_browser.quit()
     except (requests.ConnectionError, requests.Timeout):
         print("Internet is off")
