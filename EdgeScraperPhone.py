@@ -7,7 +7,7 @@ import requests
 r = RandomWords()
 mobile_emulation = {
     "deviceMetrics": {"width": 375, "height": 812, "pixelRatio": 3.0},
-    "userAgent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Mobile Safari/537.36 Edg/92.0.902.78"
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Mobile/15E148 Safari/537.36 Edg/92.0.902.78"
 }
 edge_options = webdriver.EdgeOptions()
 edge_options.use_chromium = True
@@ -17,7 +17,6 @@ edge_options.add_experimental_option("mobileEmulation", mobile_emulation)
 edge_options.add_argument("user-data-dir=C:\\Users\\XYZ\\AppData\\Local\\Microsoft\\Edge\\User Data 1")
 edge_options.add_argument("profile-directory=Default")
 edge_browser = webdriver.Edge(options=edge_options)
-edge_browser.get("https://www.bing.com/")
 
 
 def already_finished_today():
@@ -45,18 +44,18 @@ def check_gained_points():
 
 def main():
     try:
-        if already_finished_today():
-            while check_gained_points():
-                try:
-                    rw = r.get_random_word()
-                    search_bar = edge_browser.find_element('xpath', '//*[@id="sb_form_q"]')
-                    search_bar.clear()
-                    search_bar.send_keys(rw)
-                    search_bar.submit()
-                    print(f"done {edge_browser.current_url}")
-                except (NoSuchElementException, ElementNotInteractableException) as e:
-                    print(f"error {e}")
-            edge_browser.quit()
+        # if already_finished_today():
+        while check_gained_points():
+            try:
+                rw = r.get_random_word()
+                search_bar = edge_browser.find_element('xpath', '//*[@id="sb_form_q"]')
+                search_bar.clear()
+                search_bar.send_keys(rw)
+                search_bar.submit()
+                print(f"done {edge_browser.current_url}")
+            except (NoSuchElementException, ElementNotInteractableException) as e:
+                print(f"error {e}")
+        edge_browser.quit()
     except (requests.ConnectionError, requests.Timeout):
         print("Internet is off")
     except NoSuchWindowException:

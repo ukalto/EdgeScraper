@@ -43,18 +43,18 @@ def check_gained_points():
 
 def main():
     try:
-        if already_finished_today():
-            while check_gained_points():
-                try:
-                    rw = r.get_random_word()
-                    search_bar = edge_browser.find_element('xpath', '//*[@id="sb_form_q"]')
-                    search_bar.clear()
-                    search_bar.send_keys(rw)
-                    search_bar.submit()
-                    print(f"done {edge_browser.current_url}")
-                except (NoSuchElementException, ElementNotInteractableException) as e:
-                    print(f"error {e}")
-            edge_browser.quit()
+        # if already_finished_today():
+        while check_gained_points():
+            try:
+                rw = r.get_random_word()
+                search_bar = edge_browser.find_element('xpath', '//*[@id="sb_form_q"]')
+                search_bar.clear()
+                search_bar.send_keys(rw)
+                search_bar.submit()
+                print(f"done {edge_browser.current_url}")
+            except (NoSuchElementException, ElementNotInteractableException) as e:
+                print(f"error {e}")
+        edge_browser.quit()
     except (requests.ConnectionError, requests.Timeout):
         print("Internet is off")
     except NoSuchWindowException:
