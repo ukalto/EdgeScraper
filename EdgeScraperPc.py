@@ -29,16 +29,18 @@ def already_finished_today():
 def check_gained_points():
     while True:
         try:
+            edge_browser.get('https://rewards.bing.com/pointsbreakdown')
             time.sleep(2)
-            edge_browser.find_element('xpath', '//*[@id="id_rh"]').click()
-            time.sleep(2)
-            edge_browser.switch_to.frame("bepfm")
-            fp, sp = edge_browser.find_element('xpath', '//*[@id="modern-flyout"]/div/div[5]/div/div/div[1]/div/div').text.split('/')
+            # bing deleted iframe and switched to another panel therefore points are read out different from now on
+            # edge_browser.find_element('xpath', '//*[@id="id_rc"]').click()
+            # time.sleep(2)
+            # edge_browser.switch_to.frame("bepfm")
+            fp, sp = edge_browser \
+                .find_element('xpath', '//*[@id="userPointsBreakdown"]/div/div[2]/div/div[1]/div/div[2]/mee-rewards-user-points-details/div/div/div/div/p[2]').text.split('/')
             edge_browser.switch_to.default_content()
             return fp != sp
         except (NoSuchElementException, ElementNotInteractableException, NoSuchFrameException) as e:
             print(f"Couldn't find element {e}")
-            continue
 
 
 def main():
@@ -46,6 +48,7 @@ def main():
         # if already_finished_today():
         while check_gained_points():
             try:
+                edge_browser.get("https://www.bing.com/")
                 rw = r.get_random_word()
                 search_bar = edge_browser.find_element('xpath', '//*[@id="sb_form_q"]')
                 search_bar.clear()
