@@ -38,7 +38,7 @@ def check_gained_points():
             fp, sp = edge_browser \
                 .find_element('xpath', '//*[@id="userPointsBreakdown"]/div/div[2]/div/div[1]/div/div[2]/mee-rewards-user-points-details/div/div/div/div/p[2]').text.split('/')
             edge_browser.switch_to.default_content()
-            return fp != sp
+            return fp.strip() != sp.strip()
         except (NoSuchElementException, ElementNotInteractableException, NoSuchFrameException) as e:
             print(f"Couldn't find element {e}")
 
