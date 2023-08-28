@@ -49,6 +49,7 @@ def main():
         while check_gained_points():
             try:
                 edge_browser.get("https://www.bing.com/")
+                time.sleep(1)
                 rw = r.get_random_word()
                 search_bar = edge_browser.find_element('xpath', '//*[@id="sb_form_q"]')
                 search_bar.clear()
